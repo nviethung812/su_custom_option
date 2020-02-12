@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="catalog_product_option_type_value" resource="default" engine="innodb">
+        <column xsi:type="text" name="custom_image" nullable="true" comment="Option Image"/>
+    </table>
+
+    <table name="sosc_log" resource="default" engine="innodb" comment="Custom Log">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Post ID"/>
+        <column xsi:type="text" name="content" nullable="true" comment="Log Content"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+
+</schema>

@@ -1,0 +1,9 @@
+{
+  "catalog_product_option_type_value" : {
+    "column" : {
+      "custom_text" : true,
+      "image_name" : true,
+      "image_size" : true
+    }
+  }
+}

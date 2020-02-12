@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\CustomOptions" type="SU\CustomOption\Modifier\CustomOptionModifier" />
+
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\ProductDataProvider">
+        <plugin name="su_option_plugin" type="SU\CustomOption\Plugin\OptionDataProvider" sortOrder="10" disabled="false"  />
+    </type>
+
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
+        <plugin name="su_initialization_helper_plugin" type="SU\CustomOption\Plugin\ProductHelperPlugin" sortOrder="10" disabled="false"  />
+    </type>
+
+    <type name="Magento\Catalog\Model\ImageUploader">
+        <plugin name="su_image_uploader_plugin" type="SU\CustomOption\Plugin\ImageUploaderPlugin" sortOrder="10" disabled="false"  />
+    </type>
+
+    <type name="SU\CustomOption\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">su/tmp/image</argument>
+            <argument name="basePath" xsi:type="string">su/image</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
+
+
