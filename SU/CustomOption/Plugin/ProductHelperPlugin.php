@@ -4,6 +4,7 @@ namespace SU\CustomOption\Plugin;
 
 class ProductHelperPlugin
 {
+
     public function afterInitializeFromData(
         \Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper $helper,
         \Magento\Catalog\Model\Product $product
@@ -22,4 +23,5 @@ class ProductHelperPlugin
         }
         return $product->setOptions($originalOptions);
     }
+
 }

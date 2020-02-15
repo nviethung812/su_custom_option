@@ -114,7 +114,7 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                     ]
                 ),
                 static::FIELD_TYPE_NAME => $this->getTypeFieldConfig(30),
-                static::FIELD_DEPEND_NAME => $this->getDependFieldConfig(40),
+//                static::FIELD_DEPEND_NAME => $this->getDependFieldConfig(40),
                 static::FIELD_IS_REQUIRE_NAME => $this->getIsRequireFieldConfig(50),
             ]
         ];
@@ -140,14 +140,14 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
             'arguments' => [
                 'data' => [
                     'config' => [
-//                        'label' => __('Example'),
+                        'label' => __('Image'),
                         'componentType' => Field::NAME,
-                        'formElement' => 'imageUploader',
+                        'formElement' => 'fileUploader',
                         'dataScope' => static::FIELD_CUSTOM_IMAGE_NAME,
                         'previewTmpl' => 'Magento_Catalog/image-preview',
                         'elementTmpl' => 'ui/form/element/uploader/uploader',
                         'uploaderConfig' => [
-                            "url" => "catalog/category_image/upload"
+                            "url" => "su_custom/image/upload"
                         ],
                         'dataType' => Text::NAME,
                         'sortOrder' => $sortOrder,
@@ -157,26 +157,26 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
         ];
     }
 
-    private function getDependFieldConfig($sortOrder, array $config = [])
-    {
-        $om = \Magento\Framework\App\ObjectManager::getInstance();
-        $dependOptions = $om->create("SU\CustomOption\Model\Config\Source\Product\Options\Depend");
-
-//        var_dump($this->locator->getProduct()->getId());die;
-        return [
-            'arguments' => [
-                'data' => [
-                    'config' => [
-                        'label' => __('Depend On'),
-                        'componentType' => Field::NAME,
-                        'formElement' => Select::NAME,
-                        'dataScope' => static::FIELD_DEPEND_NAME,
-                        'dataType' => Text::NAME,
-                        'sortOrder' => $sortOrder,
-                        'options' => $dependOptions->toOptionArray($this->locator->getProduct())
-                    ],
-                ],
-            ],
-        ];
-    }
+//    private function getDependFieldConfig($sortOrder, array $config = [])
+//    {
+//        $om = \Magento\Framework\App\ObjectManager::getInstance();
+//        $dependOptions = $om->create("SU\CustomOption\Model\Config\Source\Product\Options\Depend");
+//
+////        var_dump($this->locator->getProduct()->getId());die;
+//        return [
+//            'arguments' => [
+//                'data' => [
+//                    'config' => [
+//                        'label' => __('Depend On'),
+//                        'componentType' => Field::NAME,
+//                        'formElement' => Select::NAME,
+//                        'dataScope' => static::FIELD_DEPEND_NAME,
+//                        'dataType' => Text::NAME,
+//                        'sortOrder' => $sortOrder,
+//                        'options' => $dependOptions->toOptionArray($this->locator->getProduct())
+//                    ],
+//                ],
+//            ],
+//        ];
+//    }
 }
