@@ -6,7 +6,7 @@ namespace SU\CustomOption\Plugin;
 //use Magento\Framework\Exception\LocalizedException;
 //use Magento\Framework\File\Uploader;
 //
-class ProductPlugin extends \Magento\Catalog\Model\Product\Gallery\CreateHandler
+class ProductSave extends \Magento\Catalog\Model\Product\Gallery\CreateHandler
 {
 //    protected $imageHandle;
     protected $optionTypeValueFactory;

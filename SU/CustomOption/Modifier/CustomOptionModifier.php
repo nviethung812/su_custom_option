@@ -147,7 +147,7 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                         'previewTmpl' => 'Magento_Catalog/image-preview',
                         'elementTmpl' => 'ui/form/element/uploader/uploader',
                         'uploaderConfig' => [
-                            "url" => "su_custom/image/upload"
+                            "url" => "catalog/product_gallery/upload"
                         ],
                         'dataType' => Text::NAME,
                         'sortOrder' => $sortOrder,

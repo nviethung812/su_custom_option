@@ -2,7 +2,7 @@
 
 namespace SU\CustomOption\Plugin;
 
-class ProductHelperPlugin
+class ProductHelper
 {
 
     public function afterInitializeFromData(

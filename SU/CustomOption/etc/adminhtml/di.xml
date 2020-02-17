@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\CustomOptions" type="SU\CustomOption\Modifier\CustomOptionModifier" />
 <!--    <preference for="Magento\Catalog\Block\Product\View\Options\Type\Select\Checkable" type="SU\CustomOption\Block\Product\View\CheckableModifier" />-->
-    <preference for="Magento\Catalog\Block\Product\View\Options\Type\Select" type="SU\CustomOption\Block\Product\View\Select" />
+<!--    <preference for="Magento\Catalog\Block\Product\View\Options\Type\Select" type="SU\CustomOption\Block\Product\View\Select" />-->
 
 <!--    <preference for="Magento\Catalog\Block\Product\View\Options\Type\Select" type="SU\CustomOption\Block\Product\View\SelectModifier" />-->
 
@@ -11,16 +11,16 @@
     </type>
 
     <type name="Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper">
-        <plugin name="su_initialization_helper_plugin" type="SU\CustomOption\Plugin\ProductHelperPlugin" />
+        <plugin name="su_initialization_helper_plugin" type="SU\CustomOption\Plugin\ProductHelper" />
     </type>
 
     <type name="Magento\Catalog\Model\Product">
-        <plugin name="su_save_plugin" type="SU\CustomOption\Plugin\ProductPlugin"/>
+        <plugin name="su_save_plugin" type="SU\CustomOption\Plugin\ProductSave"/>
     </type>
 
-<!--    <type name="Magento\Catalog\Block\Product\View\Options\Type\Select\Checkable">-->
-<!--        <plugin name="su_view_option_image" type="SU\CustomOption\Plugin\CheckablePlugin" />-->
-<!--    </type>-->
+    <type name="Magento\Catalog\Controller\Adminhtml\Product\Gallery\Upload">
+        <plugin name="su_upload_image" type="SU\CustomOption\Plugin\ImageUpload" />
+    </type>
 
 </config>
 
