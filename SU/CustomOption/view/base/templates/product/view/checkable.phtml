@@ -77,8 +77,12 @@ if ($option) : ?>
 
                 </label>
             </div>
+            <!----------------------Custom ------------------------->
             <?php $image = json_decode($value->getCustomImage(), true);?>
-            <img width="80px" height="80px" src="<?= $image["url"];?>"/>
+            <?php if ($image): ?>
+                <img width="80px" height="80px" src="<?= $image["url"];?>"/>
+            <?php endif; ?>
+            <!----------------------Custom ------------------------->
         <?php endforeach; ?>
     </div>
 <?php endif; ?>

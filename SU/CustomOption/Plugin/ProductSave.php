@@ -38,22 +38,24 @@ class ProductSave extends \Magento\Catalog\Model\Product\Gallery\CreateHandler
         $originalOptions = $product->getOptions();
         foreach ($originalOptions as $optionKey => $optionValue) {
             $data = $optionValue->getData();
-            foreach ($data["values"] as $itemKey => $itemValue) {
-                if (isset($itemValue["custom_image"])) {
-                    $image = json_decode($itemValue["custom_image"], true);
-                    if (isset($image["file"])) {
-                        try {
-                            $newName = $this->moveImageFromTmp($image["file"]);
-                            $optionTypeValue = $this->optionTypeValueFactory->create()->load($itemValue["option_type_id"]);
-                            $optionTypeValue->setData("custom_image", str_replace($image["file"], $newName, $optionTypeValue->getData("custom_image")));
-                            $optionTypeValue->setData("custom_image", str_replace("\/tmp", "", $optionTypeValue->getData("custom_image")));
-                            $optionTypeValue->save();
-                        } catch (\Exception $e) {
+            if (isset($data["values"])) {
+                foreach ($data["values"] as $itemKey => $itemValue) {
+                    if (isset($itemValue["custom_image"])) {
+                        $image = json_decode($itemValue["custom_image"], true);
+                        if (isset($image["file"])) {
+                            try {
+                                $newName = $this->moveImageFromTmp($image["file"]);
+                                $optionTypeValue = $this->optionTypeValueFactory->create()->load($itemValue["option_type_id"]);
+                                $optionTypeValue->setData("custom_image", str_replace($image["file"], $newName, $optionTypeValue->getData("custom_image")));
+                                $optionTypeValue->setData("custom_image", str_replace("\/tmp", "", $optionTypeValue->getData("custom_image")));
+                                $optionTypeValue->save();
+                            } catch (\Exception $e) {
+                            }
                         }
                     }
                 }
+                $originalOptions[$optionKey]->setData($data);
             }
-            $originalOptions[$optionKey]->setData($data);
         }
         return $product->setOptions($originalOptions);
     }

@@ -4,7 +4,6 @@ namespace SU\CustomOption\Plugin;
 
 class ProductHelper
 {
-
     public function afterInitializeFromData(
         \Magento\Catalog\Controller\Adminhtml\Product\Initialization\Helper $helper,
         \Magento\Catalog\Model\Product $product
@@ -12,16 +11,17 @@ class ProductHelper
         $originalOptions = $product->getOptions();
         foreach ($originalOptions as $optionKey => $optionValue) {
             $data = $optionValue->getData();
-            foreach ($data["values"] as $itemKey => $itemValue) {
-                if (isset($data["values"][$itemKey]["custom_image"])) {
-                    $data["values"][$itemKey]["custom_image"] = strval(json_encode($itemValue["custom_image"][0]));
-                } else {
-                    $data["values"][$itemKey]["custom_image"] = null;
+            if (isset($data["values"])) {
+                foreach ($data["values"] as $itemKey => $itemValue) {
+                    if (isset($data["values"][$itemKey]["custom_image"])) {
+                        $data["values"][$itemKey]["custom_image"] = strval(json_encode($itemValue["custom_image"][0]));
+                    } else {
+                        $data["values"][$itemKey]["custom_image"] = null;
+                    }
                 }
+                $originalOptions[$optionKey]->setData($data);
             }
-            $originalOptions[$optionKey]->setData($data);
         }
         return $product->setOptions($originalOptions);
     }
-
 }

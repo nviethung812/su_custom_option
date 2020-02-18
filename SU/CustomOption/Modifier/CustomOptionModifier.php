@@ -7,11 +7,13 @@ use Magento\Ui\Component\DynamicRows;
 use Magento\Ui\Component\Form\Element\DataType\Text;
 use Magento\Ui\Component\Form\Element\Select;
 use Magento\Ui\Component\Form\Field;
+use Magento\Ui\Component\Form\Fieldset;
 
 class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\CustomOptions
 {
     const FIELD_CUSTOM_IMAGE_NAME = 'custom_image';
     const FIELD_DEPEND_NAME = 'depend';
+    const FIELD_DEPEND_OPTION_STATUS = "is_depend_option_enabled";
 
     protected function getSelectTypeGridConfig($sortOrder)
     {
@@ -114,8 +116,9 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                     ]
                 ),
                 static::FIELD_TYPE_NAME => $this->getTypeFieldConfig(30),
-//                static::FIELD_DEPEND_NAME => $this->getDependFieldConfig(40),
+                static::FIELD_DEPEND_NAME => $this->getDependFieldConfig(40),
                 static::FIELD_IS_REQUIRE_NAME => $this->getIsRequireFieldConfig(50),
+                static::FIELD_DEPEND_OPTION_STATUS => $this->getToggleDependOptionStatusFieldConfig(60)
             ]
         ];
 
@@ -132,6 +135,47 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
 //        var_dump($titlePath);die;
 
         return $commonContainer;
+    }
+
+    protected function createCustomOptionsPanel()
+    {
+        $this->meta = array_replace_recursive(
+            $this->meta,
+            [
+                static::GROUP_CUSTOM_OPTIONS_NAME => [
+                    'arguments' => [
+                        'data' => [
+                            'config' => [
+                                'label' => __('Customizable Options'),
+                                'componentType' => Fieldset::NAME,
+                                'dataScope' => static::GROUP_CUSTOM_OPTIONS_SCOPE,
+                                'collapsible' => true,
+                                'sortOrder' => $this->getNextGroupSortOrder(
+                                    $this->meta,
+                                    static::GROUP_CUSTOM_OPTIONS_PREVIOUS_NAME,
+                                    static::GROUP_CUSTOM_OPTIONS_DEFAULT_SORT_ORDER
+                                ),
+                            ],
+                        ],
+                    ],
+                    'children' => [
+//                        static::FIELD_DEPEND_OPTION_STATUS => $this->getToggleDependOptionStatusFieldConfig(5),
+                        static::CONTAINER_HEADER_NAME => $this->getHeaderContainerConfig(10),
+                        static::FIELD_ENABLE => $this->getEnableFieldConfig(20),
+                        static::GRID_OPTIONS_NAME => $this->getOptionsGridConfig(30)
+                    ]
+                ]
+            ]
+        );
+
+        $this->meta = array_merge_recursive(
+            $this->meta,
+            [
+                static::IMPORT_OPTIONS_MODAL => $this->getImportOptionsModalConfig()
+            ]
+        );
+
+        return $this;
     }
 
     private function getCustomImageFieldConfig($sortOrder)
@@ -157,26 +201,51 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
         ];
     }
 
-//    private function getDependFieldConfig($sortOrder, array $config = [])
-//    {
+    private function getToggleDependOptionStatusFieldConfig($sortOrder, array $config = [])
+    {
+        return [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'component' => 'SU_CustomOption/js/single-checkbox',
+                        'formElement' => 'checkbox',
+                        'componentType' => Field::NAME,
+                        'dataType' => 'boolean',
+                        'visible' => 1,
+//                        'default' => '1',
+                        'label' => __('Dependent Option'),
+                        'valueMap' => [
+                            'true' => '1',
+                            'false' => '0'
+                        ],
+                        'prefer' => 'toggle'
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    private function getDependFieldConfig($sortOrder, array $config = [])
+    {
 //        $om = \Magento\Framework\App\ObjectManager::getInstance();
 //        $dependOptions = $om->create("SU\CustomOption\Model\Config\Source\Product\Options\Depend");
-//
-////        var_dump($this->locator->getProduct()->getId());die;
-//        return [
-//            'arguments' => [
-//                'data' => [
-//                    'config' => [
-//                        'label' => __('Depend On'),
-//                        'componentType' => Field::NAME,
-//                        'formElement' => Select::NAME,
-//                        'dataScope' => static::FIELD_DEPEND_NAME,
-//                        'dataType' => Text::NAME,
-//                        'sortOrder' => $sortOrder,
+
+//        var_dump($this->locator->getProduct()->getId());die;
+        return [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'label' => __('Depend On'),
+                        'componentType' => Field::NAME,
+                        'formElement' => Select::NAME,
+                        'dataScope' => static::FIELD_DEPEND_NAME,
+                        'dataType' => Text::NAME,
+                        'visible' => 0,
+                        'sortOrder' => $sortOrder
 //                        'options' => $dependOptions->toOptionArray($this->locator->getProduct())
-//                    ],
-//                ],
-//            ],
-//        ];
-//    }
+                    ],
+                ],
+            ],
+        ];
+    }
 }

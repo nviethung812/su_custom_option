@@ -9,10 +9,12 @@ class OptionDataProvider
         foreach ($result as $dataKey => $dataValue) {
             if ($dataKey != "config") {
                 foreach ($dataValue["product"]["options"] as $optionKey => $optionValue) {
-                    foreach ($optionValue["values"] as $itemKey => $itemValue) {
-                        $image = $result[$dataKey]["product"]["options"][$optionKey]["values"][$itemKey]["custom_image"];
-                        if ($image != null) {
-                            $result[$dataKey]["product"]["options"][$optionKey]["values"][$itemKey]["custom_image"] = [json_decode($image, true)];
+                    if (isset($optionValue["values"])) {
+                        foreach ($optionValue["values"] as $itemKey => $itemValue) {
+                            $image = $result[$dataKey]["product"]["options"][$optionKey]["values"][$itemKey]["custom_image"];
+                            if ($image != null) {
+                                $result[$dataKey]["product"]["options"][$optionKey]["values"][$itemKey]["custom_image"] = [json_decode($image, true)];
+                            }
                         }
                     }
                 }
