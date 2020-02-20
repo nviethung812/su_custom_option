@@ -21,7 +21,7 @@ $class = ($_option->getIsRequire()) ? ' required' : '';
 ?>
 <div class="field<?= /* @noEscape */ $class ?>"
      id="wrapper-options-<?= $block->escapeHtmlAttr($_option->getId()); ?>"
-     <?= $depend;?>
+     <?php echo $depend;?>
 >
     <label class="label" for="select_<?= $block->escapeHtmlAttr($_option->getId()) ?>">
         <span><?= $block->escapeHtml($_option->getTitle()) ?></span>
@@ -38,47 +38,44 @@ $class = ($_option->getIsRequire()) ? ' required' : '';
 <script>
     function myFunc(option_type_id, checkbox, option_type, option_id) {
 
-        require(['jquery', "Magento_Catalog/js/price-box"], function ($, priceBox) {
+        // require(["jquery","Magento_Catalog/js/price-utils"], function ($, priceUtils) {
+        //
+        //     // console.log($('span.price-final_price > span.price-wrapper > span.price').text());
+        // });
 
-            if (checkbox.checked){
-                $(checkbox).parent().siblings("div").find("img").css({"border" : "solid 1px red"});
-                $('input:radio').not(':checked').parent().siblings("div").find("img").css({"border" : ""});
-            }
-            else{
-                $(checkbox).parent().siblings("div").find("img").css({"border" : "solid 1px white"});
-            }
+        require(['jquery'], function ($) {
+            var form_data = new FormData();
+            form_data.append('option_type_id', option_type_id);
+            form_data.append('option_type', option_type);
+            form_data.append('option_id', option_id);
 
-            $(document).ready(function () {
-                var form_data = new FormData();
-                form_data.append('option_type_id', option_type_id);
-                form_data.append('option_type', option_type);
-                form_data.append('option_id', option_id);
-
-                $.ajax({
-                    url : "<?= $block->getBaseUrl() . "su_custom/option/optiondepend" ?>",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: form_data,
-                    type: 'post',
-                    dataType: 'json',
-                    success: function(json) {
-                        if (option_type === 'checkbox'){
-                            if (!$.isEmptyObject(json)) {
-                                Object.values(json).forEach(function (data) {
-                                    if (checkbox.checked){
-                                        $("#wrapper-options-" + data).show();
-                                    }
-                                    else {
-                                        $("#wrapper-options-" + data).hide();
-                                        $("#wrapper-options-" + data + " :input").prop("checked", false);
-                                    }
-                                })
-                            }
+            $.ajax({
+                url : "<?= $block->getBaseUrl() . "su_custom/option/optiondepend" ?>",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,
+                type: 'post',
+                dataType: 'json',
+                success: function(json) {
+                    if (option_type === 'checkbox'){
+                        if (!$.isEmptyObject(json)) {
+                            Object.values(json).forEach(function (data) {
+                                if (checkbox.checked){
+                                    $("#wrapper-options-" + data).show();
+                                }
+                                else {
+                                    $("#wrapper-options-" + data).hide();
+                                    // $("#wrapper-options-" + data).find("input").each(function () {
+                                    //     $('span.price-final_price > span.price-wrapper > span.price').text(parseInt($('span.price-final_price > span.price-wrapper > span.price').text().substring(1)) - parseInt($(this).attr("price").substring(1)));
+                                    // });
+                                    $("#wrapper-options-" + data + " :input").prop("checked", false);
+                                }
+                            })
                         }
                     }
-                });
-            })
+                }
+            });
         });
     }
 

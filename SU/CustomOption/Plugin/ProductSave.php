@@ -80,8 +80,10 @@ class ProductSave extends \Magento\Catalog\Model\Product\Gallery\CreateHandler
     {
         $depend = $option->getData("depend");
         foreach ($option->getData()["values"] as $value) {
-            if ($value["option_type_id"] == $depend) {
-                return true;
+            if (isset($value["option_type_id"])) {
+                if ($value["option_type_id"] == $depend) {
+                    return true;
+                }
             }
         }
         return false;

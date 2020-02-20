@@ -5,6 +5,8 @@
         <type name="Magento\Catalog\Block\Product\View\Options\Type\Select">
                 <plugin name="su_select_plugin" type="SU\CustomOption\Block\Product\View\SelectPlugin" />
         </type>
+
+        <type name="Magento\Quote\Model\Quote">
+                <plugin name="su_select_plugin" type="SU\CustomOption\Plugin\AddToCartPlugin" />
+        </type>
 </config>
-
-

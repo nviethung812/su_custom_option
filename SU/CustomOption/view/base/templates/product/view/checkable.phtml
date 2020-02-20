@@ -20,6 +20,9 @@ if ($option) : ?>
 
     <div class="options-list nested" id="options-<?= $block->escapeHtmlAttr($option->getId()) ?>-list">
         <?php if ($optionType === Option::OPTION_TYPE_RADIO && !$option->getIsRequire()) :?>
+        <div
+                class="w3-border w3-row w3-padding w3-margin-bottom"
+                style="display: flex; align-items: center;">
             <div class="field choice admin__field admin__field-option">
                 <input type="radio"
                        id="options_<?= $block->escapeHtmlAttr($option->getId()) ?>"
@@ -36,6 +39,7 @@ if ($option) : ?>
                         </span>
                 </label>
             </div>
+        </div>
         <?php endif; ?>
 
         <?php foreach ($option->getValues() as $value) : ?>
@@ -56,7 +60,8 @@ if ($option) : ?>
 
             <div
                     class="option-item w3-border w3-row w3-padding w3-margin-bottom"
-                    style="display: flex; align-items: center;">
+                    style="display: flex; align-items: center;"
+            >
                 <div class="w3-threequarter field choice admin__field admin__field-option <?= /* @noEscape */ $option->getIsRequire() ? 'required' : '' ?>" style="margin: auto;">
                     <input type="<?= $block->escapeHtmlAttr($optionType) ?>"
                            class="<?= $optionType === Option::OPTION_TYPE_RADIO
@@ -71,7 +76,7 @@ if ($option) : ?>
                            <?= $block->escapeHtml($checked) ?>
                            data-selector="<?= $block->escapeHtmlAttr($dataSelector) ?>"
                            price="<?= $block->escapeHtmlAttr($block->getCurrencyByStore($value)) ?>"
-                           onchange="myFunc(<?= $value->getOptionTypeId() ?>, this, '<?= $optionType?>', '<?= $option->getId()?>')"
+                           onclick="borderImage(this);myFunc(<?= $value->getOptionTypeId() ?>, this, '<?= $optionType?>', '<?= $option->getId()?>')"
                     />
                     <label class="label admin__field-label"
                            for="options_<?= $block->escapeHtmlAttr($option->getId() . '_' . $count) ?>">
@@ -95,18 +100,35 @@ if ($option) : ?>
     </div>
 <?php endif; ?>
 <script>
-require(["jquery"], function ($) {
-    $(document).ready(function () {
-        $('.option-item').on('click', function () {
-            var checkbox = $(this).find('input');
-            checkbox.click();
-        });
+    require(["jquery"], function ($) {
+        $(document).ready(function () {
+            // Trigger checkbox click on parent div click
+            // Start
+            $(".option-item").on('click', function () {
+                var checkbox = $(this).find('input');
+                // checkbox.click();
+                alert("Hello")
+            });
 
-        $(".option-item input,label").on("click", function(e){
-            e.stopPropagation();
-        });
+            $(".option-item input,label").on("click", function(e){
+                e.stopPropagation();
+            });
+            // End
 
+        });
     });
-})
+
+    // Show image red border when checkbox checked
+    function borderImage(checkbox) {
+        require(["jquery"], function ($) {
+            if (checkbox.checked){
+                $(checkbox).parent().siblings("div").find("img").css({"border" : "solid 1px red"});
+                $('input:radio').not(':checked').parent().siblings("div").find("img").css({"border" : ""});
+            }
+            else{
+                $(checkbox).parent().siblings("div").find("img").css({"border" : "solid 1px white"});
+            }
+        })
+    }
 
 </script>
