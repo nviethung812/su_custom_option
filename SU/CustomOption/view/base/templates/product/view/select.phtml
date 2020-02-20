@@ -1,0 +1,86 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+
+<?php /* @var $block \Magento\Catalog\Block\Product\View\Options\Type\Select */ ?>
+<?php
+$_option = $block->getOption();
+?>
+
+<?php
+if ($_option->getData("is_depend_option_enabled")) {
+    $depend = "style='display: none'";
+} else {
+    $depend = "style='display: block'";
+}
+
+$class = ($_option->getIsRequire()) ? ' required' : '';
+?>
+<div class="field<?= /* @noEscape */ $class ?>"
+     id="wrapper-options-<?= $block->escapeHtmlAttr($_option->getId()); ?>"
+     <?= $depend;?>
+>
+    <label class="label" for="select_<?= $block->escapeHtmlAttr($_option->getId()) ?>">
+        <span><?= $block->escapeHtml($_option->getTitle()) ?></span>
+    </label>
+    <div class="control">
+        <?= $block->getValuesHtml() ?>
+        <?php if ($_option->getIsRequire()) :?>
+            <?php if ($_option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_RADIO || $_option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_CHECKBOX) :?>
+                <span id="options-<?= $block->escapeHtmlAttr($_option->getId()) ?>-container"></span>
+            <?php endif; ?>
+        <?php endif;?>
+    </div>
+</div>
+<script>
+    function myFunc(option_type_id, checkbox, option_type, option_id) {
+
+        require(['jquery', "Magento_Catalog/js/price-box"], function ($, priceBox) {
+
+            if (checkbox.checked){
+                $(checkbox).parent().siblings("div").find("img").css({"border" : "solid 1px red"});
+                $('input:radio').not(':checked').parent().siblings("div").find("img").css({"border" : ""});
+            }
+            else{
+                $(checkbox).parent().siblings("div").find("img").css({"border" : "solid 1px white"});
+            }
+
+            $(document).ready(function () {
+                var form_data = new FormData();
+                form_data.append('option_type_id', option_type_id);
+                form_data.append('option_type', option_type);
+                form_data.append('option_id', option_id);
+
+                $.ajax({
+                    url : "<?= $block->getBaseUrl() . "su_custom/option/optiondepend" ?>",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    dataType: 'json',
+                    success: function(json) {
+                        if (option_type === 'checkbox'){
+                            if (!$.isEmptyObject(json)) {
+                                Object.values(json).forEach(function (data) {
+                                    if (checkbox.checked){
+                                        $("#wrapper-options-" + data).show();
+                                    }
+                                    else {
+                                        $("#wrapper-options-" + data).hide();
+                                        $("#wrapper-options-" + data + " :input").prop("checked", false);
+                                    }
+                                })
+                            }
+                        }
+                    }
+                });
+            })
+        });
+    }
+
+
+</script>

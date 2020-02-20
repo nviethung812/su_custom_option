@@ -6,6 +6,8 @@ class OptionDataProvider
 {
     public function afterGetData(\Magento\Catalog\Ui\DataProvider\Product\Form\ProductDataProvider $dataProvider, $result)
     {
+//        echo '<pre>' . var_export($result, true) . '</pre>';
+//        die;
         foreach ($result as $dataKey => $dataValue) {
             if ($dataKey != "config") {
                 foreach ($dataValue["product"]["options"] as $optionKey => $optionValue) {

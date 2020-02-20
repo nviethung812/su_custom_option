@@ -6,8 +6,9 @@
         <column xsi:type="text" name="custom_image" nullable="true" comment="Option Image"/>
     </table>
 
-    <table name="catalog_product_entity" resource="default" engine="innodb">
-        <column xsi:type="smallint" padding="6" name="is_depend_option_enabled" default="0" comment="Depend Option Status"/>
+    <table name="catalog_product_option" resource="default" engine="innodb">
+        <column xsi:type="boolean" name="is_depend_option_enabled" nullable="false" default="false" comment="Option Dependence"/>
+        <column xsi:type="int" name="depend" nullable="true" comment="Value that option depend on"/>
     </table>
 
     <table name="sosc_log" resource="default" engine="innodb" comment="Custom Log">

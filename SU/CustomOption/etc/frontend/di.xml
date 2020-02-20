@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
         <preference for="Magento\Catalog\Block\Product\View\Options\Type\Select\Checkable" type="SU\CustomOption\Block\Product\View\CheckableModifier" />
+
+        <type name="Magento\Catalog\Block\Product\View\Options\Type\Select">
+                <plugin name="su_select_plugin" type="SU\CustomOption\Block\Product\View\SelectPlugin" />
+        </type>
 </config>
 
 

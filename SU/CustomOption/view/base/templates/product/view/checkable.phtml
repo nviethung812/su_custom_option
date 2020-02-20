@@ -51,38 +51,62 @@ if ($option) : ?>
             if ($arraySign) {
                 $dataSelector .= '[' . $value->getOptionTypeId() . ']';
             }
+
             ?>
 
-            <div class="field choice admin__field admin__field-option <?= /* @noEscape */ $option->getIsRequire() ? 'required' : '' ?>">
-                <input type="<?= $block->escapeHtmlAttr($optionType) ?>"
-                       class="<?= $optionType === Option::OPTION_TYPE_RADIO
-                           ? 'radio admin__control-radio'
-                           : 'checkbox admin__control-checkbox' ?> <?= $option->getIsRequire()
-                           ? 'required' : '' ?>
+            <div
+                    class="option-item w3-border w3-row w3-padding w3-margin-bottom"
+                    style="display: flex; align-items: center;">
+                <div class="w3-threequarter field choice admin__field admin__field-option <?= /* @noEscape */ $option->getIsRequire() ? 'required' : '' ?>" style="margin: auto;">
+                    <input type="<?= $block->escapeHtmlAttr($optionType) ?>"
+                           class="<?= $optionType === Option::OPTION_TYPE_RADIO
+                               ? 'radio admin__control-radio'
+                               : 'checkbox admin__control-checkbox' ?> <?= $option->getIsRequire()
+                               ? 'required' : '' ?>
                        product-custom-option
                         <?= $block->getSkipJsReloadPrice() ? '' : 'opConfig.reloadPrice()' ?>"
-                       name="options[<?= $block->escapeHtmlAttr($option->getId()) ?>]<?= /* @noEscape */ $arraySign ?>"
-                       id="options_<?= $block->escapeHtmlAttr($option->getId() . '_' . $count) ?>"
-                       value="<?= $block->escapeHtmlAttr($value->getOptionTypeId()) ?>"
-                       <?= $block->escapeHtml($checked) ?>
-                       data-selector="<?= $block->escapeHtmlAttr($dataSelector) ?>"
-                       price="<?= $block->escapeHtmlAttr($block->getCurrencyByStore($value)) ?>"
-                />
-                <label class="label admin__field-label"
-                       for="options_<?= $block->escapeHtmlAttr($option->getId() . '_' . $count) ?>">
+                           name="options[<?= $block->escapeHtmlAttr($option->getId()) ?>]<?= /* @noEscape */ $arraySign ?>"
+                           id="options_<?= $block->escapeHtmlAttr($option->getId() . '_' . $count) ?>"
+                           value="<?= $block->escapeHtmlAttr($value->getOptionTypeId()) ?>"
+                           <?= $block->escapeHtml($checked) ?>
+                           data-selector="<?= $block->escapeHtmlAttr($dataSelector) ?>"
+                           price="<?= $block->escapeHtmlAttr($block->getCurrencyByStore($value)) ?>"
+                           onchange="myFunc(<?= $value->getOptionTypeId() ?>, this, '<?= $optionType?>', '<?= $option->getId()?>')"
+                    />
+                    <label class="label admin__field-label"
+                           for="options_<?= $block->escapeHtmlAttr($option->getId() . '_' . $count) ?>">
                 <span>
                     <?= $block->escapeHtml($value->getTitle()) ?>
                 </span>
-                    <?= /* @noEscape */ $block->formatPrice($value) ?>
+                        <?= /* @noEscape */ $block->formatPrice($value) ?>
 
-                </label>
+                    </label>
+                </div>
+                <!----------------------Custom ------------------------->
+                <div class="w3-quarter">
+                    <?php $image = json_decode($value->getCustomImage(), true);?>
+                    <?php if ($image): ?>
+                        <img style="border: solid 1px white" width="60px" height="60px" src="<?= $image["url"];?>"/>
+                    <?php endif; ?>
+                </div>
+                <!----------------------Custom ------------------------->
             </div>
-            <!----------------------Custom ------------------------->
-            <?php $image = json_decode($value->getCustomImage(), true);?>
-            <?php if ($image): ?>
-                <img width="80px" height="80px" src="<?= $image["url"];?>"/>
-            <?php endif; ?>
-            <!----------------------Custom ------------------------->
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
+<script>
+require(["jquery"], function ($) {
+    $(document).ready(function () {
+        $('.option-item').on('click', function () {
+            var checkbox = $(this).find('input');
+            checkbox.click();
+        });
+
+        $(".option-item input,label").on("click", function(e){
+            e.stopPropagation();
+        });
+
+    });
+})
+
+</script>

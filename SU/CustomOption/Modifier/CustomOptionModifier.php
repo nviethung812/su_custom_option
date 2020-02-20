@@ -116,9 +116,9 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                     ]
                 ),
                 static::FIELD_TYPE_NAME => $this->getTypeFieldConfig(30),
-                static::FIELD_DEPEND_NAME => $this->getDependFieldConfig(40),
-                static::FIELD_IS_REQUIRE_NAME => $this->getIsRequireFieldConfig(50),
-                static::FIELD_DEPEND_OPTION_STATUS => $this->getToggleDependOptionStatusFieldConfig(60)
+                static::FIELD_DEPEND_NAME => $this->getDependentFieldConfig(40),
+                static::FIELD_DEPEND_OPTION_STATUS => $this->getToggleDependOptionStatusFieldConfig(50),
+                static::FIELD_IS_REQUIRE_NAME => $this->getIsRequireFieldConfig(60),
             ]
         ];
 
@@ -132,7 +132,6 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                 . static::META_CONFIG_PATH;
             $commonContainer = $this->arrayManager->merge($titlePath, $commonContainer, $useDefaultConfig);
         }
-//        var_dump($titlePath);die;
 
         return $commonContainer;
     }
@@ -159,7 +158,6 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                         ],
                     ],
                     'children' => [
-//                        static::FIELD_DEPEND_OPTION_STATUS => $this->getToggleDependOptionStatusFieldConfig(5),
                         static::CONTAINER_HEADER_NAME => $this->getHeaderContainerConfig(10),
                         static::FIELD_ENABLE => $this->getEnableFieldConfig(20),
                         static::GRID_OPTIONS_NAME => $this->getOptionsGridConfig(30)
@@ -178,7 +176,7 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
         return $this;
     }
 
-    private function getCustomImageFieldConfig($sortOrder)
+    protected function getCustomImageFieldConfig($sortOrder)
     {
         return [
             'arguments' => [
@@ -201,7 +199,7 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
         ];
     }
 
-    private function getToggleDependOptionStatusFieldConfig($sortOrder, array $config = [])
+    protected function getToggleDependOptionStatusFieldConfig($sortOrder, array $config = [])
     {
         return [
             'arguments' => [
@@ -212,25 +210,22 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                         'componentType' => Field::NAME,
                         'dataType' => 'boolean',
                         'visible' => 1,
-//                        'default' => '1',
+                        'dataScope' => static::FIELD_DEPEND_OPTION_STATUS,
                         'label' => __('Dependent Option'),
                         'valueMap' => [
                             'true' => '1',
                             'false' => '0'
                         ],
-                        'prefer' => 'toggle'
+                        'prefer' => 'toggle',
+                        'sortOrder' => $sortOrder
                     ]
                 ]
             ]
         ];
     }
 
-    private function getDependFieldConfig($sortOrder, array $config = [])
+    protected function getDependentFieldConfig($sortOrder)
     {
-//        $om = \Magento\Framework\App\ObjectManager::getInstance();
-//        $dependOptions = $om->create("SU\CustomOption\Model\Config\Source\Product\Options\Depend");
-
-//        var_dump($this->locator->getProduct()->getId());die;
         return [
             'arguments' => [
                 'data' => [
@@ -238,14 +233,46 @@ class CustomOptionModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form
                         'label' => __('Depend On'),
                         'componentType' => Field::NAME,
                         'formElement' => Select::NAME,
+                        'component' => 'Magento_Catalog/js/custom-options-type',
+                        'elementTmpl' => 'ui/grid/filters/elements/ui-select',
+                        'selectType' => 'optgroup',
                         'dataScope' => static::FIELD_DEPEND_NAME,
                         'dataType' => Text::NAME,
+                        'sortOrder' => $sortOrder,
+                        'options' => $this->getOptionTypeValues(),
+                        'disableLabel' => true,
+                        'multiple' => false,
                         'visible' => 0,
-                        'sortOrder' => $sortOrder
-//                        'options' => $dependOptions->toOptionArray($this->locator->getProduct())
+                        'selectedPlaceholders' => [
+                            'defaultPlaceholder' => __('-- Please select --'),
+                        ]
                     ],
                 ],
             ],
         ];
+    }
+
+    protected function getOptionTypeValues()
+    {
+        $options = [];
+        foreach ($this->locator->getProduct()->getOptions() as $option) {
+            if ($option->getValues() != null) {
+                $group = [
+                    'value' => $option->getOptionId(),
+                    'label' => $option->getTitle(),
+                    'optgroup' => []
+                ];
+
+                foreach ($option->getValues() as $value) {
+                    $group['optgroup'][] = [
+                        'label' =>  $value->getTitle(),
+                        'value' => $value->getOptionTypeId()
+                    ];
+                }
+
+                $options[] = $group;
+            }
+        }
+        return $options;
     }
 }

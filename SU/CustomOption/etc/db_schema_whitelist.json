@@ -1,9 +1,13 @@
 {
   "catalog_product_option_type_value" : {
     "column" : {
-      "custom_text" : true,
-      "image_name" : true,
-      "image_size" : true
+      "is_depend_option_enabled" : true,
+      "depend" : true
+    }
+  },
+  "catalog_product_entity" : {
+    "column" : {
+      "is_depend_option_enabled" : true
     }
   }
 }
