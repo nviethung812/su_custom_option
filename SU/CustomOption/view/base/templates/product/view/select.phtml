@@ -38,17 +38,16 @@ $class = ($_option->getIsRequire()) ? ' required' : '';
 <script>
     function myFunc(option_type_id, checkbox, option_type, option_id) {
 
-        // require(["jquery","Magento_Catalog/js/price-utils"], function ($, priceUtils) {
-        //
-        //     // console.log($('span.price-final_price > span.price-wrapper > span.price').text());
-        // });
+        require(["jquery","Magento_Catalog/js/price-utils"], function ($, priceUtils) {
+            var originalPrice = $('span.price-final_price > span.price-wrapper > span.price').text().substring(1).replace(",","");
+        });
 
         require(['jquery'], function ($) {
             var form_data = new FormData();
             form_data.append('option_type_id', option_type_id);
             form_data.append('option_type', option_type);
             form_data.append('option_id', option_id);
-
+            form_data.append('checked', checkbox.checked);
             $.ajax({
                 url : "<?= $block->getBaseUrl() . "su_custom/option/optiondepend" ?>",
                 cache: false,
@@ -61,23 +60,31 @@ $class = ($_option->getIsRequire()) ? ' required' : '';
                     if (option_type === 'checkbox'){
                         if (!$.isEmptyObject(json)) {
                             Object.values(json).forEach(function (data) {
+                                data = data["option_id"]
                                 if (checkbox.checked){
                                     $("#wrapper-options-" + data).show();
                                 }
                                 else {
                                     $("#wrapper-options-" + data).hide();
-                                    // $("#wrapper-options-" + data).find("input").each(function () {
-                                    //     $('span.price-final_price > span.price-wrapper > span.price').text(parseInt($('span.price-final_price > span.price-wrapper > span.price').text().substring(1)) - parseInt($(this).attr("price").substring(1)));
-                                    // });
-                                    $("#wrapper-options-" + data + " :input").prop("checked", false);
+                                    var originalPrice = $('span.price-final_price > span.price-wrapper > span.price').text().substring(1).replace(",","");
+                                    var moneySign = $('span.price-final_price > span.price-wrapper > span.price').text().substring(0,1);
+                                    $("#wrapper-options-" + data).find("input").each(function () {
+                                        if ($(this).prop("checked")){
+                                            originalPrice -= $(this).attr("price");
+                                        }
+                                    });
+                                    $('span.price-final_price > span.price-wrapper > span.price').text(moneySign + numberWithCommas(originalPrice));
                                 }
                             })
                         }
                     }
+                    // console.log(json)
                 }
             });
         });
     }
 
-
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 </script>

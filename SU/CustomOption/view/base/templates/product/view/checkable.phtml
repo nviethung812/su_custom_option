@@ -92,7 +92,17 @@ if ($option) : ?>
                 <div class="w3-quarter">
                     <?php $image = json_decode($value->getCustomImage(), true);?>
                     <?php if ($image): ?>
-                        <img style="border: solid 1px white" width="60px" height="60px" src="<?= $image["url"];?>"/>
+                        <img style="
+                        border: solid 1px white;
+                             user-drag: none;
+                             user-select: none;
+                             -moz-user-select: none;
+                             -webkit-user-drag: none;
+                             -webkit-user-select: none;
+                             -ms-user-select: none;"
+                             width="60px"
+                             height="60px"
+                             src="<?= $image["url"];?>"/>
                     <?php endif; ?>
                 </div>
                 <!----------------------Custom ------------------------->
@@ -107,8 +117,6 @@ if ($option) : ?>
             $(".option-item input,label").on("click", function(e){
                 e.stopPropagation();
             });
-
-
         });
     });
 

@@ -45,8 +45,11 @@ class ProductSave extends \Magento\Catalog\Model\Product\Gallery\CreateHandler
             }
         }
 
-//        echo "<pre>" . var_export(($subject->getOptions()[2]->getData()), true) . "</pre>";
-//        die;
+        if ($this->isDependInCircle($subject)) {
+            throw new \Exception(
+                __('Option can not depend in circle. Please try again.')
+            );
+        }
     }
 
     public function afterSave(\Magento\Catalog\Model\Product $subject, \Magento\Catalog\Model\Product $product)
@@ -83,6 +86,28 @@ class ProductSave extends \Magento\Catalog\Model\Product\Gallery\CreateHandler
             if (isset($value["option_type_id"])) {
                 if ($value["option_type_id"] == $depend) {
                     return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected function isDependInCircle(\Magento\Catalog\Model\Product $product)
+    {
+        $options = $product->getOptions();
+        foreach ($options as $option) {
+            $depend = $option->getData("depend");
+            foreach ($options as $optionSecond) {
+                if ($option->getOptionId() != $optionSecond->getOptionId()) {
+                    foreach ($optionSecond->getData()["values"] as $valueSecond) {
+                        if ($valueSecond["option_type_id"] == $depend) {
+                            foreach ($option->getData()["values"] as $valueFirst) {
+                                if ($valueFirst["option_type_id"] == $optionSecond->getData("depend")) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
