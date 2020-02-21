@@ -6,13 +6,6 @@ class AddToCartPlugin
 {
     public function beforeAddProduct(\Magento\Quote\Model\Quote $subject, \Magento\Catalog\Model\Product $product, $request)
     {
-        $om = \Magento\Framework\App\ObjectManager::getInstance();
-        $customLog = $om->create("SU\CustomOption\Model\CustomLogFactory");
-        $log = $customLog->create();
-
-        $log->setData(["content" => strval(count($request))]);
-        $log->save();die;
-
         if ($request !== null) {
             $originalOptions = $product->getOptions();
             foreach ($originalOptions as $optionKey => $optionValue) {

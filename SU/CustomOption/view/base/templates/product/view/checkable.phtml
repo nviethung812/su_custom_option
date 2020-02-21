@@ -61,6 +61,7 @@ if ($option) : ?>
             <div
                     class="option-item w3-border w3-row w3-padding w3-margin-bottom"
                     style="display: flex; align-items: center;"
+                    onclick="parentClick(this)"
             >
                 <div class="w3-threequarter field choice admin__field admin__field-option <?= /* @noEscape */ $option->getIsRequire() ? 'required' : '' ?>" style="margin: auto;">
                     <input type="<?= $block->escapeHtmlAttr($optionType) ?>"
@@ -102,21 +103,22 @@ if ($option) : ?>
 <script>
     require(["jquery"], function ($) {
         $(document).ready(function () {
-            // Trigger checkbox click on parent div click
-            // Start
-            $(".option-item").on('click', function () {
-                var checkbox = $(this).find('input');
-                // checkbox.click();
-                alert("Hello")
-            });
-
+            // Prevent infinite click, trigger by parentClick() function
             $(".option-item input,label").on("click", function(e){
                 e.stopPropagation();
             });
-            // End
+
 
         });
     });
+
+    // Trigger checkbox click on parent div click
+    function parentClick(parent){
+        require(["jquery"], function ($) {
+            var checkbox = $(parent).find('input');
+            checkbox.click();
+        })
+    }
 
     // Show image red border when checkbox checked
     function borderImage(checkbox) {
