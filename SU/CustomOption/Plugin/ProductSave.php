@@ -100,10 +100,12 @@ class ProductSave extends \Magento\Catalog\Model\Product\Gallery\CreateHandler
             foreach ($options as $optionSecond) {
                 if ($option->getOptionId() != $optionSecond->getOptionId()) {
                     foreach ($optionSecond->getData()["values"] as $valueSecond) {
-                        if ($valueSecond["option_type_id"] == $depend) {
-                            foreach ($option->getData()["values"] as $valueFirst) {
-                                if ($valueFirst["option_type_id"] == $optionSecond->getData("depend")) {
-                                    return true;
+                        if (isset($valueSecond["option_type_id"])) {
+                            if ($valueSecond["option_type_id"] == $depend) {
+                                foreach ($option->getData()["values"] as $valueFirst) {
+                                    if ($valueFirst["option_type_id"] == $optionSecond->getData("depend")) {
+                                        return true;
+                                    }
                                 }
                             }
                         }
